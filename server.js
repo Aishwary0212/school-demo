@@ -334,8 +334,22 @@ app.get("/public-events", async (req, res) => {
   }
 });
 app.get("/notices", async (req, res) => {
-  const data = await Notice.find().sort({ createdAt: -1 });
-  res.json(data);
+  console.log("=== NOTICES ENDPOINT CALLED ===");
+  try {
+    console.log("Fetching notices from database...");
+    const data = await Notice.find().sort({ createdAt: -1 });
+    console.log("Notices found:", data.length);
+    console.log("Notices data:", JSON.stringify(data, null, 2));
+    res.json(data);
+  } catch (err) {
+    console.error("=== NOTICES ERROR ===");
+    console.error("Error:", err.message);
+    console.error("Stack:", err.stack);
+    res.status(500).json({
+      msg: "Error fetching notices",
+      error: err.message,
+    });
+  }
 });
 app.post(
   "/add-notice",
