@@ -257,32 +257,31 @@ app.post('/set-cover', verify, async (req, res) => {
 // PUBLIC EVENTS (with cover image)
 app.get("/public-events", async (req, res) => {
   try {
-    const data = await Image.aggregate([
-      // First, separate cover images
-      {
-        $sort: { isCover: -1 }, // Cover images first
-      },
-      {
-        $group: {
-          _id: "$event",
-          coverImage: { $first: "$path" }, // Takes first (which will be cover if exists)
-          isCover: { $first: "$isCover" },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          event: "$_id",
-          cover: "$coverImage",
-          count: 1,
-        },
-      },
-    ]);
+    // Get all unique events
+    const events = await Image.distinct("event");
 
-    res.json(data);
+    const result = [];
+
+    for (let event of events) {
+      // Find cover image or get first image
+      let coverImg = await Image.findOne({ event, isCover: true });
+
+      if (!coverImg) {
+        coverImg = await Image.findOne({ event });
+      }
+
+      const count = await Image.countDocuments({ event });
+
+      result.push({
+        event,
+        cover: coverImg ? coverImg.path : null,
+        count,
+      });
+    }
+
+    res.json(result);
   } catch (err) {
-    console.log("Aggregation error:", err);
+    console.log("Error fetching events:", err);
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 });
