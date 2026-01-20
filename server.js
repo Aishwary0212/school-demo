@@ -256,29 +256,34 @@ app.post('/set-cover', verify, async (req, res) => {
 })
 // PUBLIC EVENTS (with cover image)
 app.get("/public-events", async (req, res) => {
-  try{const data = await Image.aggregate([
-    {
-      $group: {
-        _id: "$event",
-        cover: {
-          $first: {
-            $cond: [{ $eq: ["$isCover", true] }, "$path", null],
-          },
-        },
-        count: { $sum: 1 },
+  try {
+    const data = await Image.aggregate([
+      // First, separate cover images
+      {
+        $sort: { isCover: -1 }, // Cover images first
       },
-    },
-  ]);
+      {
+        $group: {
+          _id: "$event",
+          coverImage: { $first: "$path" }, // Takes first (which will be cover if exists)
+          isCover: { $first: "$isCover" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          event: "$_id",
+          cover: "$coverImage",
+          count: 1,
+        },
+      },
+    ]);
 
-  res.json(
-    data.map((i) => ({
-      event: i._id,
-      cover: i.cover,
-      count: i.count,
-    }))
-  );}catch(err){
-    console.log("aggregation error", err);
-    res.status(500).json({ msg: "Server error" });
+    res.json(data);
+  } catch (err) {
+    console.log("Aggregation error:", err);
+    res.status(500).json({ msg: "Server error", error: err.message });
   }
 });
 app.get("/notices", async (req, res) => {
