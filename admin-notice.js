@@ -3,7 +3,9 @@ const token = localStorage.getItem("token");
 loadNotices();
 
 async function loadNotices() {
-  const res = await fetch("http://localhost:5000/notices");
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com/notices",
+  );
   const data = await res.json();
 
   const box = document.getElementById("noticeList");
@@ -50,7 +52,7 @@ async function addNotice() {
     form.append("file", file);
   }
 
-  await fetch("http://localhost:5000/add-notice", {
+  await fetch("https://cyan-sheep-842659.hostingersite.com/add-notice", {
     method: "POST",
     headers: {
       Authorization: "Bearer " + token,
@@ -65,7 +67,7 @@ async function addNotice() {
 async function del(id) {
   if (!confirm("Delete?")) return;
 
-  await fetch("http://localhost:5000/notice/" + id, {
+  await fetch("https://cyan-sheep-842659.hostingersite.com/notice/" + id, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + token,

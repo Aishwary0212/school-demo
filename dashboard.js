@@ -6,11 +6,14 @@
     return;
   }
 
-  const res = await fetch("http://localhost:5000/dashboard", {
-    headers: {
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com/dashboard",
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
     },
-  });
+  );
 
   const data = await res.json();
 
@@ -23,7 +26,7 @@
 // LOAD EVENTS (DROPDOWN)
 // ======================
 async function loadEvents() {
-  const res = await fetch("http://localhost:5000/events");
+  const res = await fetch("https://cyan-sheep-842659.hostingersite.com/events");
   const data = await res.json();
 
   const select = document.getElementById("eventSelect");
@@ -39,9 +42,6 @@ async function loadEvents() {
 
 loadEvents();
 
-// ======================
-// CREATE NEW EVENT
-// ======================
 async function createEvent() {
   const event = document.getElementById("newEvent").value;
 
@@ -52,14 +52,17 @@ async function createEvent() {
 
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:5000/create-event", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com/create-event",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ event }),
     },
-    body: JSON.stringify({ event }),
-  });
+  );
 
   const data = await res.json();
   alert(data.msg);
@@ -92,13 +95,16 @@ async function upload() {
     formData.append("images", file); // backend expects "images"
   }
 
-  const res = await fetch("http://localhost:5000/upload", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com//upload",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: formData,
     },
-    body: formData,
-  });
+  );
 
   const data = await res.json();
   alert(data.msg);
@@ -113,14 +119,17 @@ async function createNewEvent() {
 
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:5000/create-event", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com/create-event",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ event }),
     },
-    body: JSON.stringify({ event }),
-  });
+  );
 
   const data = await res.json();
   alert(data.msg);
@@ -143,12 +152,15 @@ async function deleteEvent() {
 
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`http://localhost:5000/delete-event/${event}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    `https://cyan-sheep-842659.hostingersite.com/delete-event/${event}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
     },
-  });
+  );
 
   const data = await res.json();
   alert(data.msg);
@@ -169,12 +181,14 @@ async function deleteEvent(){
   const token = localStorage.getItem("token");
 
   const res = await fetch(
-    `http://localhost:5000/delete-event/${event}`,{
-      method:"DELETE",
-      headers:{
-        "Authorization":"Bearer "+token
-      }
-  });
+    `https://cyan-sheep-842659.hostingersite.com/delete-event/${event}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    },
+  );
 
   const data = await res.json();
   alert(data.msg);
@@ -192,17 +206,20 @@ async function renameEvent() {
 
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:5000/rename-event", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com/rename-event",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        oldEvent,
+        newEvent,
+      }),
     },
-    body: JSON.stringify({
-      oldEvent,
-      newEvent,
-    }),
-  });
+  );
 
   const data = await res.json();
   alert(data.msg);

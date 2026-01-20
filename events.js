@@ -10,7 +10,7 @@
 
 // Load events
 async function loadEvents() {
-  const res = await fetch("http://localhost:5000/events");
+  const res = await fetch("https://cyan-sheep-842659.hostingersite.com/events");
   const data = await res.json();
 
   const box = document.getElementById("eventList");
@@ -18,7 +18,9 @@ async function loadEvents() {
 
   for (let ev of data) {
     // get image count
-    const r = await fetch(`http://localhost:5000/images/${ev}`);
+    const r = await fetch(
+      `https://cyan-sheep-842659.hostingersite.com/images/${ev}`,
+    );
     const imgs = await r.json();
 
     box.innerHTML += `
@@ -52,17 +54,20 @@ async function renamePrompt(oldName) {
 
   const token = localStorage.getItem("token");
 
-  const res = await fetch("http://localhost:5000/rename-event", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com/rename-event",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        oldEvent: oldName,
+        newEvent: newName,
+      }),
     },
-    body: JSON.stringify({
-      oldEvent: oldName,
-      newEvent: newName,
-    }),
-  });
+  );
 
   const data = await res.json();
   alert(data.msg);
@@ -75,12 +80,15 @@ async function deleteEvent(ev) {
 
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`http://localhost:5000/delete-event/${ev}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: "Bearer " + token,
+  const res = await fetch(
+    `https://cyan-sheep-842659.hostingersite.com/delete-event/${ev}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
     },
-  });
+  );
 
   const data = await res.json();
   alert(data.msg);
