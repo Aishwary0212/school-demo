@@ -96,7 +96,7 @@ async function upload() {
   }
 
   const res = await fetch(
-    "https://cyan-sheep-842659.hostingersite.com//upload",
+    "https://cyan-sheep-842659.hostingersite.com/upload",
     {
       method: "POST",
       headers: {
