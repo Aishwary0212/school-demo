@@ -13,7 +13,22 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 const PORT=process.env.PORT || 5000;
-mongoose.connect(process.env.MONGO_URI).then(() => console.log("DB Connected")).catch((err) => console.log("MONGO ERROR",err));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("=== DB Connected Successfully ===");
+    // Check collections
+    mongoose.connection.db.listCollections().toArray((err, collections) => {
+      console.log(
+        "Available collections:",
+        collections.map((c) => c.name),
+      );
+    });
+  })
+  .catch((err) => {
+    console.error("=== MONGO CONNECTION ERROR ===");
+    console.error(err);
+  });
 
 const UserSchema = new mongoose.Schema({
   name: String,
@@ -256,33 +271,66 @@ app.post('/set-cover', verify, async (req, res) => {
 })
 // PUBLIC EVENTS (with cover image)
 app.get("/public-events", async (req, res) => {
+  console.log("=== PUBLIC-EVENTS ENDPOINT CALLED ===");
+  console.log("Time:", new Date().toISOString());
+
   try {
-    // Get all unique events
-    const events = await Image.distinct("event");
+    // First, let's check if we have any images at all
+    const totalImages = await Image.countDocuments();
+    console.log("Total images in database:", totalImages);
 
-    const result = [];
-
-    for (let event of events) {
-      // Find cover image or get first image
-      let coverImg = await Image.findOne({ event, isCover: true });
-
-      if (!coverImg) {
-        coverImg = await Image.findOne({ event });
-      }
-
-      const count = await Image.countDocuments({ event });
-
-      result.push({
-        event,
-        cover: coverImg ? coverImg.path : null,
-        count,
-      });
+    if (totalImages === 0) {
+      console.log("No images found in database");
+      return res.json([]);
     }
 
-    res.json(result);
+    // Get a sample image to see the structure
+    const sampleImage = await Image.findOne();
+    console.log(
+      "Sample image structure:",
+      JSON.stringify(sampleImage, null, 2),
+    );
+
+    console.log("Starting aggregation...");
+
+    const data = await Image.aggregate([
+      {
+        $sort: { isCover: -1 }, // Cover images first
+      },
+      {
+        $group: {
+          _id: "$event",
+          coverImage: { $first: "$path" },
+          isCover: { $first: "$isCover" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          event: "$_id",
+          cover: "$coverImage",
+          count: 1,
+        },
+      },
+    ]);
+
+    console.log("Aggregation successful!");
+    console.log("Number of events found:", data.length);
+    console.log("Events data:", JSON.stringify(data, null, 2));
+
+    res.json(data);
   } catch (err) {
-    console.log("Error fetching events:", err);
-    res.status(500).json({ msg: "Server error", error: err.message });
+    console.error("=== ERROR OCCURRED ===");
+    console.error("Error name:", err.name);
+    console.error("Error message:", err.message);
+    console.error("Error stack:", err.stack);
+
+    res.status(500).json({
+      msg: "Server error",
+      error: err.message,
+      errorName: err.name,
+    });
   }
 });
 app.get("/notices", async (req, res) => {
