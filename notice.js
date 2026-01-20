@@ -1,7 +1,9 @@
 loadNotices();
 
 async function loadNotices() {
-  const res = await fetch("http://localhost:5000/notices");
+  const res = await fetch(
+    "https://cyan-sheep-842659.hostingersite.com//notices",
+  );
   const data = await res.json();
 
   const box = document.getElementById("noticeList");
