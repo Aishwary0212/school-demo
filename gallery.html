@@ -215,7 +215,7 @@ async function loadEvents(){
 
 
  const res = await fetch("https://cyan-sheep-842659.hostingersite.com/public-events");
- if(!res.ok) throw new Error(res.statusText);
+ if(!res.ok) throw new Error("server error : ",res.status);
  allEvents = await res.json();
  }
  catch(err){
