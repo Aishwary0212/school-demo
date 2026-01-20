@@ -373,6 +373,35 @@ app.post(
   }
 );
 
+app.delete("/notice/:id", verify, async (req, res) => {
+  console.log("=== DELETE NOTICE ===");
+  console.log("Notice ID:", req.params.id);
 
+  try {
+    const notice = await Notice.findById(req.params.id);
+
+    if (!notice) {
+      return res.status(404).json({ msg: "Notice not found" });
+    }
+
+    // Delete the file if it exists
+    if (notice.file && fs.existsSync(notice.file)) {
+      console.log("Deleting file:", notice.file);
+      fs.unlinkSync(notice.file);
+    }
+
+    // Delete from database
+    await Notice.findByIdAndDelete(req.params.id);
+
+    console.log("Notice deleted successfully");
+    res.json({ msg: "Notice deleted" });
+  } catch (err) {
+    console.error("Delete notice error:", err);
+    res.status(500).json({
+      msg: "Error deleting notice",
+      error: err.message,
+    });
+  }
+});
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
