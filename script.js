@@ -1,6 +1,6 @@
 // REGISTER
 async function register() {
-  const res = await fetch("http://localhost:5000/register", {
+  const res = await fetch("https://cyan-sheep-842659.hostingersite.com/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -20,7 +20,7 @@ async function register() {
 
 // LOGIN
 async function login() {
-  const res = await fetch("http://localhost:5000/login", {
+  const res = await fetch("https://cyan-sheep-842659.hostingersite.com/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
