@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 const PORT=process.env.PORT || 5000;
-mongoose.connect(process.env.MONGO_URI).then(() => console.log("DB Connected")).catch((err) => console.log(err));
+mongoose.connect(process.env.MONGO_URI).then(() => console.log("DB Connected")).catch((err) => console.log("MONGO ERROR",err));
 
 const UserSchema = new mongoose.Schema({
   name: String,
@@ -256,7 +256,7 @@ app.post('/set-cover', verify, async (req, res) => {
 })
 // PUBLIC EVENTS (with cover image)
 app.get("/public-events", async (req, res) => {
-  const data = await Image.aggregate([
+  try{const data = await Image.aggregate([
     {
       $group: {
         _id: "$event",
@@ -276,7 +276,10 @@ app.get("/public-events", async (req, res) => {
       cover: i.cover,
       count: i.count,
     }))
-  );
+  );}catch(err){
+    console.log("aggregation error", err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 app.get("/notices", async (req, res) => {
   const data = await Notice.find().sort({ createdAt: -1 });
