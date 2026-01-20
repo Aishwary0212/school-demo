@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     spinner.style.display = "block";
 
     try {
-      const res = await fetch(`http://localhost:5000/images/${ev}`);
+      const res = await fetch(`https://cyan-sheep-842659.hostingersite.com/images/${ev}`);
       const data = await res.json();
 
       spinner.style.display = "none";
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
        ⭐
       </span>
 
-      <img src="http://localhost:5000/${img.path}">
+      <img src="https://cyan-sheep-842659.hostingersite.com/${img.path}">
      </div>
     `;
       });
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       card.classList.add("deleting");
 
       try {
-        await fetch("http://localhost:5000/delete-image", {
+        await fetch("https://cyan-sheep-842659.hostingersite.com/delete-image", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const id = e.target.dataset.id;
 
       try {
-        const res = await fetch("http://localhost:5000/set-cover", {
+        const res = await fetch("https://cyan-sheep-842659.hostingersite.com/set-cover", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

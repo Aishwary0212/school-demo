@@ -1,7 +1,7 @@
 loadEvents();
 
 async function loadEvents() {
-  const res = await fetch("http://localhost:5000/public-events");
+  const res = await fetch("https://cyan-sheep-842659.hostingersite.com/public-events");
 
   const data = await res.json();
 
@@ -15,7 +15,7 @@ async function loadEvents() {
       <div class="event-card"
       onclick="openEvent('${ev.event}')">
 
-        <img src="http://localhost:5000/${ev.cover}">
+        <img src="https://cyan-sheep-842659.hostingersite.com/${ev.cover}">
 
         <div class="card-body">
 
