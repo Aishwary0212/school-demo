@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>School Notice Board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="notice.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+
+<!-- ================= HEADER / NAVBAR ================= -->
+
+<div class="top-bar">
+  <div>
+    <i class="fa-solid fa-phone"></i> +91 7522089522 |
+    <i class="fa-solid fa-envelope"></i> mryjss@rediffmail.com
+  </div>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-youtube"></i></a>
+  </div>
+</div>
+
+<nav class="navbar">
+  <a class="brand-container">
+    <img src="logo.jpeg">
+    <div>
+      <div class="name-main">Mary Jesus</div>
+      <div class="name-sub">Education Centre</div>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a class="nav-link" href="#">Home</a></li>
+    <li><a class="nav-link" href="#">Academics</a></li>
+    <li><a class="nav-link" href="#">Admission</a></li>
+    <li><a class="nav-link" href="notice.html">Notice</a></li>
+    <li><a class="nav-link" href="gallery.html">Gallery</a></li>
+    <li><a class="nav-link btn-login" href="login.html">Login</a></li>
+  </ul>
+</nav>
+
+
+<div class="page">
+
+  <h1 class="page-title">Notice Board</h1>
+  <p class="subtitle">
+    Official announcements and circulars from school administration
+  </p>
+
+  <div id="loader" class="loader"></div>
+
+  <div id="noticeList" class="notice-grid"></div>
+
+</div>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+ <div class="footer-container">
+
+  <div>
+   <h4>Find Us</h4>
+   <p>F 529, Barra 8, Kanpur</p>
+  </div>
+
+  <div>
+   <h4>Contact</h4>
+   <p>📞 +91 7522089522</p>
+   <p>✉ mryjss@rediffmail.com</p>
+  </div>
+
+  <div>
+   <h4>Important Links</h4>
+   <ul class="links-list">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Admission</a></li>
+    <li><a href="#">Gallery</a></li>
+   </ul>
+  </div>
+
+ </div>
+
+ <div class="copyright">
+  © <span id="year"></span> Mary Jesus Education Centre. All rights reserved.
+ </div>
+</footer>
+
+<script src="notice.js"></script>
+<script>
+document.getElementById("year").innerText=new Date().getFullYear();
+</script>
+
+</body>
+</html>

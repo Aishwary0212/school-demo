@@ -1,0 +1,83 @@
+body{
+  font-family: "Segoe UI", sans-serif;
+  background:#f3f4f6;
+  padding:30px;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+}
+
+/* TITLE */
+h1{
+  margin-bottom:20px;
+}
+
+/* INPUTS */
+input, textarea{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border:1px solid #ddd;
+  border-radius:6px;
+  font-size:14px;
+}
+
+textarea{
+  resize:none;
+  height:100px;
+}
+
+/* ADD BUTTON */
+button{
+  background:#3b82f6;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+button:hover{
+  background:#2563eb;
+}
+
+/* NOTICE CARD */
+.notice{
+  background:white;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+  margin-bottom:15px;
+  position:relative;
+}
+
+/* TITLE */
+.notice h3{
+  margin:0;
+}
+
+/* DATE */
+.date{
+  font-size:13px;
+  color:#666;
+  margin-bottom:6px;
+}
+
+/* DESC */
+.desc{
+  font-size:14px;
+  color:#444;
+}
+
+/* DELETE BUTTON */
+.del{
+  margin-top:10px;
+  background:#ef4444;
+}
+
+.del:hover{
+  background:#dc2626;
+}

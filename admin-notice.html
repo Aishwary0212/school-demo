@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin - Notices</title>
+    <link rel="stylesheet" href="admin-notice.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Manage Notices</h1>
+
+      <input id="title" placeholder="Notice title" />
+      <textarea id="desc" placeholder="Notice description"></textarea>
+      <input type="file" id="file">
+
+      <button onclick="addNotice()">Add Notice</button>
+
+      <hr />
+
+      <div id="noticeList"></div>
+    </div>
+
+    <script src="admin-notice.js"></script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Gallery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin-gallery.css" />
+  </head>
+
+  <body>
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <button class="back-btn" onclick="history.back()">← Back</button>
+      <h2 id="title"></h2>
+    </div>
+
+    <div id="spinner" class="spinner"></div>
+
+    <!-- GALLERY -->
+    <div id="gallery" class="gallery"></div>
+
+    <!-- MODAL -->
+    <div id="modal" class="modal">
+      <span onclick="closeModal()">×</span>
+      <img id="modalImg" />
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="admin-gallery.js"></script>
+  </body>
+</html>

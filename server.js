@@ -1,0 +1,309 @@
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cors = require("cors");
+
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+mongoose.connect(process.env.MONGO_URI).then(() => console.log("DB Connected"));
+
+const UserSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true },
+  password: String,
+});
+
+const ImageSchema = new mongoose.Schema({
+  event: String,
+  filename: String,
+  path: String,
+  uploadedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  isCover: {
+    type:Boolean,
+    default:false
+  },
+});
+const NoticeSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  file: String, // file path
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+
+const Notice = mongoose.model("Notice", NoticeSchema);
+
+
+const Image = mongoose.model("Image", ImageSchema);
+
+const User = mongoose.model("User", UserSchema);
+
+
+// REGISTER
+app.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const exist = await User.findOne({ email });
+  if (exist) return res.json({ msg: "User exists" });
+
+  const hash = await bcrypt.hash(password, 10);
+  await User.create({ name, email, password: hash });
+
+  res.json({ msg: "Registered successfully" });
+});
+
+// LOGIN
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) return res.json({ msg: "User not found" });
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) return res.json({ msg: "Wrong password" });
+
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+
+  res.json({ token });
+});
+
+// PROTECTED
+const verify = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.json({ msg: "No token" });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err) => {
+    if (err) return res.json({ msg: "Invalid token" });
+    next();
+  });
+};
+
+app.get("/dashboard", verify, (req, res) => {
+  res.json({ msg: "Welcome" });
+});
+
+
+//multer config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = `uploads/${req.body.event}`;
+
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir);
+  },
+
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const upload = multer({ storage });
+//upload
+app.post("/upload", verify, upload.array("images", 20), async (req, res) => {
+  const { event } = req.body;
+
+  if (!req.files || req.files.length === 0) {
+    return res.json({ msg: "No files uploaded" });
+  }
+
+  const docs = req.files.map((file) => ({
+    event,
+    filename: file.filename,
+    path: file.path,
+  }));
+
+  await Image.insertMany(docs);
+
+  res.json({ msg: "Images uploaded successfully" });
+});
+
+const noticeStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (!fs.existsSync("notice_files")) {
+      fs.mkdirSync("notice_files");
+    }
+    cb(null, "notice_files");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const noticeUpload = multer({ storage: noticeStorage });
+
+
+
+app.get("/events", async (req, res) => {
+  const events = await Image.distinct("event");
+  res.json(events);
+});
+
+app.get("/images/:event", async (req, res) => {
+  const data = await Image.find({ event: req.params.event });
+  res.json(data);
+});
+
+app.use("/uploads", express.static("uploads"));
+
+
+// CREATE NEW EVENT
+app.post("/create-event", verify, async (req, res) => {
+  const { event } = req.body;
+
+  if (!event) {
+    return res.json({ msg: "Event name required" });
+  }
+
+  // Check if event already exists
+  const exist = await Image.findOne({ event });
+
+  if (exist) {
+    return res.json({ msg: "Event already exists" });
+  }
+
+  // Create dummy record so event appears
+  await Image.create({
+    event,
+    filename: "init",
+    path: "init"
+  });
+
+  res.json({ msg: "Event created" });
+});
+
+// DELETE EVENT
+app.delete("/delete-event/:event", verify, async (req, res) => {
+  const { event } = req.params;
+
+  // delete from DB
+  await Image.deleteMany({ event });
+
+  // delete folder
+  const dir = `uploads/${event}`;
+  if (fs.existsSync(dir)) {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+
+  res.json({ msg: "Event deleted" });
+});
+
+// RENAME EVENT
+app.put("/rename-event", verify, async (req, res) => {
+  const { oldEvent, newEvent } = req.body;
+  if (!oldEvent || !newEvent)
+    return res.json({ msg: "Both names required" });
+  // check duplicate
+  const exist = await Image.findOne({ event: newEvent });
+  if (exist)
+    return res.json({ msg: "New event name already exists" });
+  // update DB
+  await Image.updateMany(
+    { event: oldEvent },
+    { $set: { event: newEvent } }
+  );
+  // rename folder
+  const oldDir = `uploads/${oldEvent}`;
+  const newDir = `uploads/${newEvent}`;
+  if (fs.existsSync(oldDir)) {
+    fs.renameSync(oldDir, newDir);
+  }
+  res.json({ msg: "Event renamed" });
+});
+app.get("/events-stats", async (req, res) => {
+  const data = await Image.aggregate([
+    { $group: { _id: "$event", count: { $sum: 1 } } },
+  ]);
+  res.json(data);
+});
+app.post("/delete-image", verify, async (req, res) => {
+  const { id, path } = req.body;
+
+  await Image.findByIdAndDelete(id);
+
+  if (fs.existsSync(path)) {
+    fs.unlinkSync(path);
+  }
+
+  res.json({ msg: "deleted" });
+});
+
+app.post('/set-cover', verify, async (req, res) => {
+  const { event, id } = req.body;
+
+  await Image.updateMany(
+    { event },
+    { $set: { isCover: false } }
+  );
+  await Image.findByIdAndUpdate(id, { isCover: true });
+  res.json({ msg: "Cover image updated" });
+})
+// PUBLIC EVENTS (with cover image)
+app.get("/public-events", async (req, res) => {
+  const data = await Image.aggregate([
+    {
+      $group: {
+        _id: "$event",
+        cover: {
+          $first: {
+            $cond: [{ $eq: ["$isCover", true] }, "$path", null],
+          },
+        },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  res.json(
+    data.map((i) => ({
+      event: i._id,
+      cover: i.cover,
+      count: i.count,
+    }))
+  );
+});
+app.get("/notices", async (req, res) => {
+  const data = await Notice.find().sort({ createdAt: -1 });
+  res.json(data);
+});
+app.post(
+  "/add-notice",
+  verify,
+  noticeUpload.single("file"),
+  async (req, res) => {
+    const { title, description } = req.body;
+
+    let filePath = "";
+    if (req.file) {
+      filePath = req.file.path;
+    }
+
+    await Notice.create({
+      title,
+      description,
+      file: filePath,
+    });
+
+    res.json({ msg: "Notice added" });
+  }
+);
+
+
+
+app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));

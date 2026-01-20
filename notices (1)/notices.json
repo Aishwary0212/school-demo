@@ -1,0 +1,30 @@
+{
+  "notices": [
+    {
+      "id": 1768423497373,
+      "title": "ef",
+      "category": "Event",
+      "date": "2026-01-15",
+      "priority": "Normal",
+      "author": "fdsd",
+      "content": "fwfd",
+      "attachmentName": "",
+      "attachmentPath": "",
+      "attachmentSize": 0,
+      "createdAt": "2026-01-14T20:44:57.373Z"
+    },
+    {
+      "id": 1768424606107,
+      "title": "holiday",
+      "category": "Holiday",
+      "date": "2026-01-16",
+      "priority": "High",
+      "author": "aishwary",
+      "content": "syllabus",
+      "attachmentName": "01 History of web.pdf",
+      "attachmentPath": "/uploads/01 History of web-1768424606089-476702024.pdf",
+      "attachmentSize": 88316,
+      "createdAt": "2026-01-14T21:03:26.107Z"
+    }
+  ]
+}

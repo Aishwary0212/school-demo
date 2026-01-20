@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MJEC Gallery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+ --primary-blue:#002366;
+ --darker-blue:#001a4d;
+ --accent-gold:#FFD700;
+ --text-white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Poppins,sans-serif;background:#f3f4f6}
+
+.top-bar{background:#001a4d;color:#fff;padding:8px 5%;display:flex;justify-content:space-between;font-size:13px}
+.social-icons a{color:#fff;margin-left:12px}
+
+.navbar{
+ background:rgba(0,35,102,.95);
+ position:sticky;
+ top:0;
+ padding:12px 5%;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ z-index:999
+}
+.brand-container{display:flex;gap:10px;align-items:center;color:white;text-decoration:none}
+.brand-container img{height:45px}
+.name-main{font-family:'Playfair Display';font-size:22px}
+.name-sub{color:gold;font-size:11px}
+
+.nav-links{list-style:none;display:flex;gap:15px}
+.nav-link{color:white;text-decoration:none;padding:8px 14px}
+.nav-link:hover{background:rgba(255,255,255,.1)}
+.btn-login{background:gold;color:#002366!important;border-radius:20px}
+
+.hamburger{display:none;color:white}
+@media(max-width:900px){
+ .hamburger{display:block}
+ .nav-links{display:none;position:absolute;top:60px;right:0;background:#002366;width:100%;flex-direction:column}
+ .nav-links.active{display:flex}
+}
+
+.news-ticker{
+ background:#fff8e1;
+ padding:8px;
+ display:flex
+}
+.ticker-label{background:gold;padding:0 10px;font-weight:600}
+.ticker-content{margin-left:10px}
+
+.wrapper{max-width:1300px;margin:auto;padding:40px 20px}
+.page-title{font-size:32px;margin-bottom:20px}
+.top-bar2{
+ background:#fff;
+ padding:15px;
+ border-radius:6px;
+ display:grid;
+ grid-template-columns:1fr 160px 160px 1fr;
+ gap:10px;
+ margin-bottom:25px
+}
+.event-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+ gap:25px
+}
+.event-card{
+ background:#fff;
+ border-radius:6px;
+ overflow:hidden;
+ box-shadow:0 4px 12px rgba(0,0,0,.1);
+ transition:.3s
+}
+.event-card:hover{transform:translateY(-5px)}
+.event-card img{width:100%;height:180px;object-fit:cover}
+.card-body{padding:12px}
+.meta{display:flex;justify-content:space-between;font-size:13px}
+.desc{font-size:13px;margin-top:6px}
+
+/* loader */
+.loader{
+ width:60px;height:60px;
+ border:6px solid #ddd;
+ border-top:6px solid #a855f7;
+ border-radius:50%;
+ margin:80px auto;
+ animation:spin 1s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.site-footer{
+ background:linear-gradient(135deg,#021133,#031b4e);
+ color:white;margin-top:60px
+}
+.footer-container{
+ max-width:1200px;
+ margin:auto;
+ padding:30px;
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+ gap:20px
+}
+.links-list a{color:#ddd;text-decoration:none}
+.links-list a:hover{color:gold}
+.copyright{text-align:center;padding:10px;background:rgba(0,0,0,.3)}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+  <div>📞 +91 7522089522 | ✉ mryjss@rediffmail.com</div>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-youtube"></i></a>
+  </div>
+</div>
+
+<nav class="navbar">
+  <a class="brand-container">
+    <img src="logo.jpeg">
+    <div>
+      <div class="name-main">Mary Jesus</div>
+      <div class="name-sub">Education Centre</div>
+    </div>
+  </a>
+
+  <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+  <ul class="nav-links" id="menu">
+    <li><a class="nav-link" href="#">Home</a></li>
+    <li><a class="nav-link" href="#">Academics</a></li>
+    <li><a class="nav-link" href="#">Admission</a></li>
+    <li><a class="nav-link" href="notice.html">Notice</a></li>
+    <li><a class="nav-link" href="gallery.html">Gallery</a></li>
+    <li><a class="nav-link btn-login" href="login.html">Login</a></li>
+  </ul>
+</nav>
+
+<div class="news-ticker">
+ <div class="ticker-label">UPDATES</div>
+ <div class="ticker-content">
+  Admission Open 2025 • Result Declared • Sports Day 25 Jan
+ </div>
+</div>
+
+<div class="wrapper">
+
+<h1 class="page-title">Photo Gallery</h1>
+
+<div class="top-bar2">
+ <div>Total Count: <b id="total">0</b></div>
+ <input id="search" placeholder="Search here...">
+</div>
+
+<div id="loader" class="loader"></div>
+<div id="events" class="event-grid"></div>
+
+</div>
+
+<footer class="site-footer">
+ <div class="footer-container">
+
+  <div>
+   <h4>Find Us</h4>
+   <p>F 529, Barra 8, Kanpur</p>
+  </div>
+
+  <div>
+   <h4>Contact</h4>
+   <p>📞 +91 7522089522</p>
+   <p>✉ mryjss@rediffmail.com</p>
+  </div>
+
+  <div>
+   <h4>Important Links</h4>
+   <ul class="links-list">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Admission</a></li>
+    <li><a href="#">Gallery</a></li>
+   </ul>
+  </div>
+
+ </div>
+
+ <div class="copyright">
+  © <span id="year"></span> MJEC. All rights reserved.
+ </div>
+</footer>
+
+<script>
+function toggleMenu(){
+ document.getElementById("menu").classList.toggle("active");
+}
+
+document.getElementById("year").innerText=new Date().getFullYear();
+
+let allEvents=[];
+
+loadEvents();
+
+async function loadEvents(){
+
+ loader.style.display="block";
+ events.style.display="none";
+
+ const res = await fetch("http://localhost:5000/public-events");
+ allEvents = await res.json();
+
+ loader.style.display="none";
+ events.style.display="grid";
+
+ showEvents(allEvents);
+}
+
+function showEvents(data){
+ total.innerText=data.length;
+ events.innerHTML="";
+
+ data.forEach(ev=>{
+  events.innerHTML+=`
+   <div class="event-card"
+   onclick="openEvent('${ev.event}')">
+    <img src="http://localhost:5000/${ev.cover}">
+    <div class="card-body">
+     <h3>${ev.event}</h3>
+     <div class="meta">
+      <span>📅 28 Nov</span>
+      <span>🖼 ${ev.count||0}</span>
+     </div>
+     <div class="desc">${ev.event}</div>
+    </div>
+   </div>
+  `;
+ });
+}
+
+  search.addEventListener("input",()=>{
+ const v=search.value.toLowerCase();
+ const f=allEvents.filter(e=>e.event.toLowerCase().includes(v));
+ showEvents(f);
+});
+function openEvent(name) {
+  location = `event.html?e=${name}`;
+}
+
+
+</script>
+
+</body>
+</html>

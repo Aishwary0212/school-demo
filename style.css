@@ -1,0 +1,131 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+}
+
+.container{
+  width:350px;
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.card{
+  margin-bottom:20px;
+}
+
+h3{
+  text-align:center;
+  margin-bottom:15px;
+  color:#333;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:6px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#667eea;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#667eea;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:15px;
+}
+
+button:hover{
+  background:#556cd6;
+}
+
+hr{
+  margin:20px 0;
+}
+.spinner{
+  width:18px;
+  height:18px;
+  border:3px solid #fff;
+  border-top:3px solid transparent;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  display:none;
+}
+
+@keyframes spin{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+button{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+}
+p{
+    margin-top: 6px;
+}
+/* NAVBAR */
+.navbar{
+  width:100%;
+  padding:15px 40px;
+  background:#1e293b;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:white;
+  position:fixed;
+  top:0;
+  left:0;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.menu{
+  display:flex;
+  gap:20px;
+}
+
+.menu a{
+  color:white;
+  text-decoration:none;
+  font-weight:500;
+}
+
+.menu button{
+  background:#ef4444;
+  border:none;
+  color:white;
+  padding:6px 12px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+/* PUSH CONTENT DOWN */
+.container{
+  margin-top:100px;
+}

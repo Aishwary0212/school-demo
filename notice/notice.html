@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice Board - MJEC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="notice.css">
+  <link rel="stylesheet" href="assets/lazy.css">
+    
+</head>
+<body>
+  <div id="site-preloader"><img src="images/logo.png" alt="MJEC" class="preloader-logo" /><div class="preloader-text">RISE AND SHINE CHILDREN OF GOD</div></div>
+  <!-- Header -->
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fa-solid fa-bell"></i> Notice Board</h1>
+      <p>Important updates and announcements for students and parents</p>
+      <div class="breadcrumb">
+        <a href="index.html"><i class="fa-solid fa-home"></i> Home</a>
+        <span> / Notice Board</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container">
+    <h2 style="margin-bottom: 24px; font-size: 24px;">
+      <i class="fa-solid fa-list"></i> Latest Notices
+    </h2>
+
+    <!-- Notice Filter -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterNotices(event, 'all')">
+        All Notices
+      </button>
+      <button class="filter-btn" onclick="filterNotices(event, 'High')">
+        <i class="fa-solid fa-exclamation"></i> High Priority
+      </button>
+      <button class="filter-btn" onclick="filterNotices(event, 'Medium')">
+        <i class="fa-solid fa-info"></i> Medium Priority
+      </button>
+      <button class="filter-btn" onclick="filterNotices(event, 'Low')">
+        <i class="fa-solid fa-check"></i> Low Priority
+      </button>
+    </div>
+
+    <!-- Notices Grid -->
+    <div id="noticeGrid" class="notice-grid">
+      <!-- Notices will load here -->
+      <div class="notice-empty">
+        <i class="fa-solid fa-inbox"></i>
+        <p>No notices available at the moment.</p>
+      </div>
+    </div>
+
+    <!-- Navigation and Footer -->
+    <div class="back-to-home">
+      <div class="nav-links">
+        <a href="index.html">
+          <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
+        <a href="gallery.html">
+          <i class="fa-solid fa-images"></i> View Gallery
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="notice.js">
+   
+  </script>
+  <script src="assets/lazy.js"></script>
+</body>
+</html>

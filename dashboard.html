@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <h2>Admin</h2>
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="events.html">Gallery</a>
+        <a href="admin-notice.html">Notices</a>
+        <a href="#">Settings</a>
+      </div>
+
+      <!-- MAIN -->
+      <div class="main">
+        <!-- TOP BAR -->
+        <div class="topbar">
+          <span>Welcome Admin</span>
+          <button onclick="logout()">Logout</button>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+          <div class="card">
+            <h2>Manage Gallery</h2>
+
+            <!-- CREATE EVENT -->
+            <label>Create New Event</label>
+            <input id="newEvent" placeholder="new-event-name" />
+            <button onclick="createNewEvent()">Create Event</button>
+
+            <hr style="margin: 15px 0" />
+
+            <!-- SELECT EVENT -->
+            <label>Select Existing Event</label>
+            <select id="eventSelect">
+              <option value="">Select Event</option>
+            </select>
+
+            <!-- UPLOAD IMAGES -->
+            <label>Upload Images</label>
+            <input type="file" id="image" multiple accept="image/*" />
+
+            <button onclick="upload()">Upload Images</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

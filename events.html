@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Events</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>Admin</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a class="active" href="events.html">Gallery</a>
+    <a href="admin-notice.html"> Notices </a>
+    <a href="#">Settings</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <span>Event Manager</span>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <h2>All Events</h2>
+      <div id="eventList" class="event-grid"></div>
+
+    </div>
+  </div>
+</div>
+
+<script src="events.js"></script>
+</body>
+</html>

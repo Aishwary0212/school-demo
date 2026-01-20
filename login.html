@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Login</h2>
+
+      <form onsubmit="login(); return false;">
+        <input id="loginEmail" placeholder="Enter Email" />
+        <input id="loginPassword" type="password" placeholder="Enter Password" />
+
+        <button id="loginBtn" type="submit">
+          <span id="loginText">Login</span>
+          <span id="loginSpinner" class="spinner"></span>
+        </button>
+      </form>
+
+      <p>
+        Don't have account?
+        <a href="register.html">Register</a>
+      </p>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

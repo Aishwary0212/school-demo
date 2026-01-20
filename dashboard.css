@@ -1,0 +1,187 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+/* BODY */
+body{
+  background:#f1f5f9;
+}
+
+/* MAIN LAYOUT */
+.layout{
+  display:flex;
+  height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:230px;
+  background:#1e293b;
+  color:white;
+  padding:20px;
+}
+
+.sidebar h2{
+  text-align:center;
+  margin-bottom:30px;
+  font-size:22px;
+}
+
+.sidebar a{
+  display:block;
+  color:white;
+  text-decoration:none;
+  padding:12px;
+  border-radius:6px;
+  margin-bottom:10px;
+  transition:0.3s;
+}
+
+.sidebar a:hover{
+  background:#334155;
+}
+
+.sidebar .active{
+  background:#3b82f6;
+}
+
+/* MAIN AREA */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+/* TOP BAR */
+.topbar{
+  background:white;
+  padding:15px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.topbar span{
+  font-size:16px;
+  font-weight:600;
+}
+
+.topbar button{
+  background:#ef4444;
+  border:none;
+  color:white;
+  padding:8px 16px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.topbar button:hover{
+  background:#dc2626;
+}
+
+/* CONTENT AREA */
+.content{
+  padding:30px;
+}
+
+/* CARD */
+.card{
+  width:350px;
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+/* HEADINGS */
+.content h2{
+  margin-bottom:20px;
+}
+
+/* INPUTS */
+input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:6px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#3b82f6;
+}
+
+/* BUTTON */
+.content button{
+  width:100%;
+  padding:10px;
+  background:#3b82f6;
+  border:none;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.content button:hover{
+  background:#2563eb;
+}
+
+/* GALLERY GRID (future use) */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+.gallery img{
+  width:100%;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.gallery img:hover{
+  transform:scale(1.05);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{
+    display:none;
+  }
+}
+.event-grid{
+  display:grid;
+  grid-template-columns:
+  repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+.event-card{
+  background:white;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 5px 10px rgba(0,0,0,.1);
+  text-align:center;
+}
+
+.event-card h3{
+  margin-bottom:5px;
+}
+
+.event-card button{
+  margin:5px;
+  padding:6px 10px;
+}
+
+.event-card .del{
+  background:#ef4444;
+}

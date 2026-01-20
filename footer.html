@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mary Jesus Education Centre - Official Footer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #021133 0%, #031b4e 100%);
+            --text-color: #ffffff;
+            --accent-color: #FFD700;
+            --accent-glow: rgba(255, 215, 0, 0.4);
+            --success-color: #00ff88;
+            --danger-color: #ff4d4d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f5;
+        }
+
+        /* --- BACK TO TOP BUTTON --- */
+        #backToTop {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--accent-color);
+            color: #031b4e;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border: none;
+            z-index: 1000;
+            font-size: 0.9rem;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        #backToTop:hover { transform: scale(1.1); background-color: #fff; }
+
+        /* --- FOOTER CONTAINER --- */
+        .site-footer {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            margin-top: auto;
+            font-size: 11px;
+            border-top: 3px solid var(--accent-color);
+            position: relative;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 8px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .footer-section { flex: 1; min-width: 0; }
+
+        /* HEADINGS */
+        h4 {
+            color: var(--accent-color);
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        a { text-decoration: none; color: #e0e0e0; transition: all 0.3s ease; }
+        ul { list-style: none; }
+
+        /* --- 1. MAP SECTION (Left) --- */
+        .map-section { flex-basis: 30%; }
+
+        /* Added position: relative here to trap the overlay */
+        .map-container {
+            width: 100%;
+            height: 85px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative; /* Crucial for the fix */
+        }
+
+        .map-container:hover { transform: translateY(-2px); border-color: var(--accent-color); }
+
+        iframe { width: 100%; height: 100%; border: 0; }
+
+        /* --- NEW: MAP OVERLAY LINK --- */
+        /* This creates a transparent clickable layer on top of the map */
+        .map-overlay-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10; /* Sits on top of iframe */
+            background-color: transparent;
+        }
+
+        .get-dir-link {
+            display: inline-block;
+            font-size: 0.65rem;
+            margin-top: 5px;
+            color: var(--accent-color);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* --- 2. SCHOOL INFO (Center) --- */
+        .school-info { flex-basis: 40%; text-align: center; padding: 0 2px; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: gray; }
+
+        .logo-text {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .contact-list li { margin-bottom: 4px; display: flex; justify-content: center; align-items: flex-start; gap: 4px; line-height: 1.3; }
+        .contact-list i { color: var(--accent-color); font-size: 0.75rem; margin-top: 2px; }
+
+        .social-icons { margin-top: 10px; display: flex; justify-content: center; gap: 8px; }
+        .social-icons a {
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        /* --- 3. IMPORTANT LINKS (Right) --- */
+        .quick-links { flex-basis: 30%; text-align: right; }
+        .links-list li { margin-bottom: 4px; }
+        .links-list a { padding: 1px 0; display: inline-block; font-size: 0.7rem; position: relative; }
+        .links-list a::after {
+            content: ''; position: absolute; width: 0; height: 1px;
+            bottom: 0; right: 0; background-color: var(--accent-color); transition: width 0.3s;
+        }
+        .links-list a:hover { color: var(--accent-color); }
+        .links-list a:hover::after { width: 100%; }
+
+        /* --- COPYRIGHT --- */
+        .copyright {
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            text-align: center;
+            padding: 8px;
+            font-size: 0.65rem;
+            color: #aaa;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- DESKTOP UPGRADES --- */
+        @media (min-width: 768px) {
+            .site-footer { font-size: 14px; }
+            .footer-container { padding: 40px 20px; gap: 50px; }
+            h4 { font-size: 1.1rem; margin-bottom: 15px; }
+
+            .map-container { height: 160px; border-radius: 8px; }
+            /* On Desktop, we might want to interact with the map, so we hide the overlay */
+            .map-overlay-link { display: none; }
+
+            .get-dir-link { font-size: 0.85rem; margin-top: 8px; }
+            .school-info { text-align: left; padding: 0; font-size: 0.95rem; }
+            .status-badge { font-size: 0.75rem; padding: 4px 10px; margin-bottom: 10px; }
+            .logo-text { font-size: 1.2rem; margin-bottom: 10px; }
+            .contact-list li { justify-content: flex-start; margin-bottom: 8px; gap: 10px; }
+            .contact-list i { font-size: 0.9rem; }
+            .social-icons { justify-content: flex-start; gap: 12px; margin-top: 15px; }
+            .social-icons a { width: 32px; height: 32px; font-size: 1rem; }
+            .social-icons a:hover { background: var(--accent-color); color: #031b4e; box-shadow: 0 0 15px var(--accent-glow); transform: translateY(-3px); }
+            .quick-links { text-align: left; }
+            .links-list li { margin-bottom: 6px; }
+            .links-list a { font-size: 0.9rem; padding: 2px 0; }
+            .links-list a::after { right: auto; left: 0; }
+            #backToTop { width: 45px; height: 45px; bottom: 20px; right: 20px; }
+            .copyright { padding: 10px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <button id="backToTop" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+
+            <div class="footer-section map-section">
+                <h4>Find Us</h4>
+                <div class="map-container">
+                    <iframe
+                        src="https://maps.google.com/maps?q=Mary%20Jesus%20Education%20Centre%2C%20F%20529%2C%20Barra%208%2C%20Kanpur&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        allowfullscreen="" loading="lazy">
+                    </iframe>
+                    
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Mary+Jesus+Education+Centre+Barra+Kanpur&destination_place_id=ChIJt65Q0q1HnDkRVSIDCENPxMw" 
+                       target="_blank" 
+                       class="map-overlay-link"
+                       title="Open in Google Maps">
+                    </a>
+                </div>
+                
+                <a href="https://www.google.com/maps/dir/?api=1&destination=Mary+Jesus+Education+Centre+Barra+Kanpur&destination_place_id=ChIJt65Q0q1HnDkRVSIDCENPxMw"
+                    target="_blank" class="get-dir-link">
+                    <i class="fas fa-location-arrow"></i> Get Directions
+                </a>
+            </div>
+
+            <div class="footer-section school-info">
+                <div class="status-badge" id="schoolStatus">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Checking...</span>
+                </div>
+
+                <div class="logo-text">MJEC</div>
+
+                <ul class="contact-list">
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>F 529, Barra 8, Kanpur, 208027</span>
+                    </li>
+                    <li>
+                        <a href="tel:+917522089522" style="display:flex; gap:8px; color:#e0e0e0; align-items:center;">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+91 75220 89522</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/mjeckanpur?mibextid=ZbWKwL" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/mjeckanpur?igsh=OWpqZXhqcmMxcTFt" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@maryjesuseducationcentre3581" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section quick-links">
+                <h4>Important Links</h4>
+                <ul class="links-list">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Academics</a></li>
+                    <li><a href="#">Admission</a></li>
+                    <li><a href="#">Gallery</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            <p>© <span id="year"></span> Mary Jesus Education Centre. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Dynamic Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 2. Live Open/Closed Logic
+        function updateStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const day = now.getDay(); // 0 = Sunday
+
+            const statusText = document.getElementById('statusText');
+            const statusDot = document.querySelector('.status-dot');
+
+            // Open Mon-Sat (1-6) from 8:00 to 14:00
+            if (day > 0 && day <= 6 && hour >= 8 && hour < 14) {
+                statusText.textContent = "Open";
+                statusText.style.color = "#00ff88";
+                statusDot.style.backgroundColor = "#00ff88";
+                statusDot.style.boxShadow = "0 0 8px #00ff88";
+            } else {
+                statusText.textContent = "Closed";
+                statusText.style.color = "#ff4d4d";
+                statusDot.style.backgroundColor = "#ff4d4d";
+                statusDot.style.boxShadow = "0 0 8px #ff4d4d";
+            }
+        }
+        updateStatus();
+
+        // 3. Back to Top Button
+        const backToTopBtn = document.getElementById("backToTop");
+        window.onscroll = function () {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTopBtn.style.display = "flex";
+            } else {
+                backToTopBtn.style.display = "none";
+            }
+        };
+        backToTopBtn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
