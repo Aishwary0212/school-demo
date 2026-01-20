@@ -2,7 +2,7 @@ loadNotices();
 
 async function loadNotices() {
   const res = await fetch(
-    "https://cyan-sheep-842659.hostingersite.com//notices",
+    "https://cyan-sheep-842659.hostingersite.com/notices",
   );
   const data = await res.json();
 
