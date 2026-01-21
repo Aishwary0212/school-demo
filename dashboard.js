@@ -22,9 +22,7 @@
   }
 })();
 
-// ======================
-// LOAD EVENTS (DROPDOWN)
-// ======================
+// loading events here
 async function loadEvents() {
   const res = await fetch("https://cyan-sheep-842659.hostingersite.com/events");
   const data = await res.json();
@@ -73,9 +71,8 @@ async function createEvent() {
   }
 }
 
-// ======================
-// UPLOAD IMAGE
-// ======================
+// uploading image
+
 async function upload() {
   const event = document.getElementById("eventSelect").value;
   const files = document.getElementById("image").files; // multiple
@@ -92,7 +89,7 @@ async function upload() {
 
   // append all images
   for (let file of files) {
-    formData.append("images", file); // backend expects "images"
+    formData.append("images", file);
   }
 
   const res = await fetch(
@@ -229,11 +226,7 @@ async function renameEvent() {
     loadEvents();
   }
 }
-
-
-// ======================
-// LOGOUT
-// ======================
+// logout
 function logout() {
   localStorage.removeItem("token");
   location = "login.html";

@@ -1,7 +1,5 @@
 const token = localStorage.getItem("token");
-
 loadNotices();
-
 async function loadNotices() {
   const res = await fetch(
     "https://cyan-sheep-842659.hostingersite.com/notices",
