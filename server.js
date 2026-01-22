@@ -298,6 +298,22 @@ app.post("/delete-image", verify, async (req, res) => {
 
   res.json({ msg: "deleted" });
 });
+//change date
+app.put("/update-event-date", verify, async (req, res) => {
+  const { event, eventDate } = req.body;
+
+  if (!event || !eventDate) {
+    return res.json({ msg: "Event & date required" });
+  }
+
+  await Image.updateMany(
+    { event },
+    { $set: { eventDate } }
+  );
+
+  res.json({ msg: "Event date updated" });
+});
+
 
 // SET COVER IMAGE
 app.post("/set-cover", verify, async (req, res) => {
