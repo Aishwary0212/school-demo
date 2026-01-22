@@ -171,6 +171,7 @@
     /* File Upload */
     .file-upload {
       position: relative;
+      cursor: pointer;
     }
 
     .file-upload input[type="file"] {
@@ -178,7 +179,10 @@
       opacity: 0;
       width: 100%;
       height: 100%;
+      top: 0;
+      left: 0;
       cursor: pointer;
+      z-index: 2;
     }
 
     .file-upload-label {
@@ -193,6 +197,8 @@
       color: rgba(255, 255, 255, 0.9);
       cursor: pointer;
       transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
     }
 
     .file-upload:hover .file-upload-label {
