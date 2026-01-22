@@ -216,11 +216,16 @@ app.get("/images/:event", async (req, res) => {
 });
 
 // CREATE NEW EVENT
+// CREATE NEW EVENT (with date)
 app.post("/create-event", verify, async (req, res) => {
-  const { event } = req.body;
+  const { event, eventDate } = req.body; // ✅ Get both
 
   if (!event) {
     return res.json({ msg: "Event name required" });
+  }
+
+  if (!eventDate) {
+    return res.json({ msg: "Event date required" });
   }
 
   // Check if event already exists
@@ -230,11 +235,12 @@ app.post("/create-event", verify, async (req, res) => {
     return res.json({ msg: "Event already exists" });
   }
 
-  // Create dummy record so event appears
+  // ✅ Create with eventDate
   await Image.create({
     event,
     filename: "init",
     path: "init",
+    eventDate: new Date(eventDate), // ✅ Save the date
   });
 
   res.json({ msg: "Event created" });
@@ -321,12 +327,12 @@ app.post("/set-cover", verify, async (req, res) => {
 });
 
 // PUBLIC EVENTS (with cover image)
+// PUBLIC EVENTS (with cover image and event date, sorted by date)
 app.get("/public-events", async (req, res) => {
   console.log("=== PUBLIC-EVENTS ENDPOINT CALLED ===");
   console.log("Time:", new Date().toISOString());
 
   try {
-    // First, let's check if we have any images at all
     const totalImages = await Image.countDocuments();
     console.log("Total images in database:", totalImages);
 
@@ -335,12 +341,8 @@ app.get("/public-events", async (req, res) => {
       return res.json([]);
     }
 
-    // Get a sample image to see the structure
     const sampleImage = await Image.findOne();
-    console.log(
-      "Sample image structure:",
-      JSON.stringify(sampleImage, null, 2)
-    );
+    console.log("Sample image structure:", JSON.stringify(sampleImage, null, 2));
 
     console.log("Starting aggregation...");
 
@@ -353,6 +355,7 @@ app.get("/public-events", async (req, res) => {
           _id: "$event",
           coverImage: { $first: "$path" },
           isCover: { $first: "$isCover" },
+          eventDate: { $first: "$eventDate" }, // Get the event date
           count: { $sum: 1 },
         },
       },
@@ -361,9 +364,16 @@ app.get("/public-events", async (req, res) => {
           _id: 0,
           event: "$_id",
           cover: "$coverImage",
+          eventDate: 1, // Include eventDate in response
           count: 1,
         },
       },
+      {
+        // ✅ Sort by eventDate - most recent first (nulls last)
+        $sort: { 
+          eventDate: -1 // -1 for descending (newest first), 1 for ascending (oldest first)
+        }
+      }
     ]);
 
     console.log("Aggregation successful!");
