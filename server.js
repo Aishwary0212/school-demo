@@ -130,6 +130,26 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
+// GET USER INFO
+app.get("/user-info", verify, async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    const user = await User.findById(decoded.id).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    
+    res.json({ 
+      name: user.name,
+      email: user.email 
+    });
+  } catch (err) {
+    res.status(500).json({ msg: "Error fetching user info" });
+  }
+});
 const upload = multer({ storage });
 
 // ===== MULTER CONFIG FOR NOTICES =====

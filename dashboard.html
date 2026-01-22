@@ -1,58 +1,595 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="dashboard.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
 
-  <body>
-    <div class="layout">
-      <!-- SIDEBAR -->
-      <div class="sidebar">
-        <h2>Admin</h2>
-        <a class="active" href="dashboard.html">Dashboard</a>
-        <a href="events.html">Gallery</a>
-        <a href="admin-notice.html">Notices</a>
-        <a href="#">Settings</a>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 25px 20px;
+      box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+      font-size: 15px;
+    }
+
+    .sidebar a:hover {
+      background: rgba(100, 116, 139, 0.3);
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .sidebar .active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* MAIN AREA */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 18px 35px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .topbar span {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .topbar button {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+      width: auto;
+    }
+
+    .topbar button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    /* CONTENT AREA */
+    .content {
+      padding: 35px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* CARDS CONTAINER */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+      max-width: 1400px;
+    }
+
+    /* CARD */
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h2 {
+      margin-bottom: 25px;
+      color: #1e293b;
+      font-size: 22px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card h2::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 2px;
+    }
+
+    /* FORM SECTION */
+    .form-section {
+      margin-bottom: 25px;
+    }
+
+    .form-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-divider {
+      margin: 25px 0;
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+    }
+
+    /* LABELS */
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #475569;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* INPUTS */
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    input:focus, select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    input[type="date"] {
+      cursor: pointer;
+    }
+
+    /* BUTTONS */
+    button {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      margin-top: 5px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+      display: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      width: auto;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width: 1024px) {
+      .cards-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    @media(max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .topbar {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .topbar span {
+        font-size: 16px;
+        order: 2;
+        width: 100%;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .card h2 {
+        font-size: 20px;
+      }
+    }
+
+    @media(max-width: 480px) {
+      .sidebar {
+        width: 100%;
+        left: -100%;
+      }
+
+      .topbar {
+        padding: 12px 15px;
+      }
+
+      .topbar span {
+        font-size: 14px;
+      }
+
+      .content {
+        padding: 15px 10px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      input, select, button {
+        font-size: 14px;
+      }
+
+      button {
+        padding: 12px;
+      }
+    }
+
+    /* Small visual enhancement */
+    .date-input-wrapper {
+      position: relative;
+    }
+
+    .date-input-wrapper::after {
+      content: '📅';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Overlay for mobile menu -->
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <h2>Admin Panel</h2>
+      <a class="active" href="dashboard.html">📊 Dashboard</a>
+      <a href="events.html">🖼️ Gallery</a>
+      <a href="admin-notice.html">📢 Notices</a>
+      <a href="#">⚙️ Settings</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOP BAR -->
+      <div class="topbar">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <span id="welcomeText">Welcome 👋</span>
+        <button onclick="logout()">Logout</button>
       </div>
 
-      <!-- MAIN -->
-      <div class="main">
-        <!-- TOP BAR -->
-        <div class="topbar">
-          <span>Welcome Admin</span>
-          <button onclick="logout()">Logout</button>
-        </div>
-
-        <!-- CONTENT -->
-        <div class="content">
+      <!-- CONTENT -->
+      <div class="content">
+        <div class="cards-container">
+          <!-- CREATE EVENT CARD -->
           <div class="card">
-            <h2>Manage Gallery</h2>
+            <h2>Create New Event</h2>
+            
+            <div class="form-section">
+              <label>Event Name *</label>
+              <input id="newEvent" placeholder="e.g., Annual Day 2024" />
 
-            <!-- CREATE EVENT -->
-            <label>Create New Event</label>
-            <input id="newEvent" placeholder="new-event-name" />
-            <button onclick="createNewEvent()">Create Event</button>
+              <label>Event Date *</label>
+              <div class="date-input-wrapper">
+                <input type="date" id="eventDate" />
+              </div>
 
-            <hr style="margin: 15px 0" />
+              <button onclick="createNewEvent()">✨ Create Event</button>
+            </div>
+          </div>
 
-            <!-- SELECT EVENT -->
-            <label>Select Existing Event</label>
-            <select id="eventSelect">
-              <option value="">Select Event</option>
-            </select>
+          <!-- UPLOAD IMAGES CARD -->
+          <div class="card">
+            <h2>Upload Images</h2>
+            
+            <div class="form-section">
+              <label>Select Event *</label>
+              <select id="eventSelect">
+                <option value="">Choose an event...</option>
+              </select>
 
-            <!-- UPLOAD IMAGES -->
-            <label>Upload Images</label>
-            <input type="file" id="image" multiple accept="image/*" />
+              <label>Choose Images *</label>
+              <input type="file" id="image" multiple accept="image/*" />
 
-            <button onclick="upload()">Upload Images</button>
+              <button onclick="upload()">📤 Upload Images</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="dashboard.js"></script>
-  </body>
+  <script>
+    (async function () {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        location = "login.html";
+        return;
+      }
+
+      const res = await fetch(
+        "https://cyan-sheep-842659.hostingersite.com/dashboard",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        },
+      );
+
+      const data = await res.json();
+
+      if (data.msg !== "Welcome") {
+        location = "login.html";
+        return;
+      }
+
+      // Fetch user info to display name
+      try {
+        const userRes = await fetch(
+          "https://cyan-sheep-842659.hostingersite.com/user-info",
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        const userData = await userRes.json();
+        
+        if (userData.name) {
+          document.getElementById("welcomeText").textContent = `Welcome ${userData.name} 👋`;
+        }
+      } catch (err) {
+        console.log("Could not fetch user info");
+      }
+    })();
+
+    // Set today's date as default
+    document.getElementById('eventDate').valueAsDate = new Date();
+
+    // Loading events
+    async function loadEvents() {
+      const res = await fetch("https://cyan-sheep-842659.hostingersite.com/events");
+      const data = await res.json();
+
+      const select = document.getElementById("eventSelect");
+      select.innerHTML = '<option value="">Choose an event...</option>';
+
+      data.forEach((ev) => {
+        const op = document.createElement("option");
+        op.value = ev;
+        op.innerText = ev;
+        select.appendChild(op);
+      });
+    }
+
+    loadEvents();
+
+    async function createNewEvent() {
+      const event = document.getElementById("newEvent").value.trim();
+      const eventDate = document.getElementById("eventDate").value;
+
+      if (!event) {
+        alert("⚠️ Please enter an event name");
+        return;
+      }
+
+      if (!eventDate) {
+        alert("⚠️ Please select an event date");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        "https://cyan-sheep-842659.hostingersite.com/create-event",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify({ event, eventDate }),
+        },
+      );
+
+      const data = await res.json();
+      alert(data.msg);
+
+      if (data.msg === "Event created") {
+        document.getElementById("newEvent").value = "";
+        document.getElementById("eventDate").valueAsDate = new Date();
+        loadEvents();
+      }
+    }
+
+    async function upload() {
+      const event = document.getElementById("eventSelect").value;
+      const files = document.getElementById("image").files;
+
+      if (!event) {
+        alert("⚠️ Please select an event");
+        return;
+      }
+
+      if (files.length === 0) {
+        alert("⚠️ Please select at least one image");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+      formData.append("event", event);
+
+      // Append all images
+      for (let file of files) {
+        formData.append("images", file);
+      }
+
+      const res = await fetch(
+        "https://cyan-sheep-842659.hostingersite.com/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+          body: formData,
+        },
+      );
+
+      const data = await res.json();
+      alert(data.msg);
+
+      if (data.msg === "Images uploaded successfully") {
+        document.getElementById("image").value = "";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      location = "login.html";
+    }
+
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+  </script>
+</body>
 </html>
