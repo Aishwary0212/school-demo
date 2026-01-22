@@ -12,7 +12,8 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 app.use(cors());
-const PORT=process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -45,10 +46,11 @@ const ImageSchema = new mongoose.Schema({
     default: Date.now,
   },
   isCover: {
-    type:Boolean,
-    default:false
+    type: Boolean,
+    default: false,
   },
 });
+
 const NoticeSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -59,14 +61,14 @@ const NoticeSchema = new mongoose.Schema({
   },
 });
 
-
 const Notice = mongoose.model("Notice", NoticeSchema);
-
-
 const Image = mongoose.model("Image", ImageSchema);
-
 const User = mongoose.model("User", UserSchema);
 
+// ===== STATIC FILE SERVING =====
+// THIS IS THE KEY FIX - Serve static files BEFORE routes
+app.use("/uploads", express.static("uploads"));
+app.use("/notice_files", express.static("notice_files")); // ← ADD THIS LINE
 
 // REGISTER
 app.post("/register", async (req, res) => {
@@ -113,8 +115,7 @@ app.get("/dashboard", verify, (req, res) => {
   res.json({ msg: "Welcome" });
 });
 
-
-//multer config
+// ===== MULTER CONFIG FOR GALLERY IMAGES =====
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = `uploads/${req.body.event}`;
@@ -130,7 +131,44 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-//upload
+
+// ===== MULTER CONFIG FOR NOTICES =====
+const noticeStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // Create notice_files folder if it doesn't exist
+    const dir = "notice_files";
+    if (!fs.existsSync(dir)) {
+      console.log("Creating notice_files directory...");
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    // Create unique filename with original extension
+    const uniqueName = Date.now() + "-" + file.originalname;
+    console.log("Saving file as:", uniqueName);
+    cb(null, uniqueName);
+  },
+});
+
+const noticeUpload = multer({ 
+  storage: noticeStorage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    // Accept common file types
+    const allowedTypes = /pdf|doc|docx|jpg|jpeg|png/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (extname && mimetype) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only PDF, DOC, DOCX, JPG, JPEG, and PNG files are allowed!'));
+    }
+  }
+});
+
+// UPLOAD GALLERY IMAGES
 app.post("/upload", verify, upload.array("images", 20), async (req, res) => {
   const { event } = req.body;
 
@@ -149,34 +187,17 @@ app.post("/upload", verify, upload.array("images", 20), async (req, res) => {
   res.json({ msg: "Images uploaded successfully" });
 });
 
-const noticeStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (!fs.existsSync("notice_files")) {
-      fs.mkdirSync("notice_files");
-    }
-    cb(null, "notice_files");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const noticeUpload = multer({ storage: noticeStorage });
-
-
-
+// GET ALL EVENTS
 app.get("/events", async (req, res) => {
   const events = await Image.distinct("event");
   res.json(events);
 });
 
+// GET IMAGES BY EVENT
 app.get("/images/:event", async (req, res) => {
   const data = await Image.find({ event: req.params.event });
   res.json(data);
 });
-
-app.use("/uploads", express.static("uploads"));
-
 
 // CREATE NEW EVENT
 app.post("/create-event", verify, async (req, res) => {
@@ -197,7 +218,7 @@ app.post("/create-event", verify, async (req, res) => {
   await Image.create({
     event,
     filename: "init",
-    path: "init"
+    path: "init",
   });
 
   res.json({ msg: "Event created" });
@@ -222,17 +243,12 @@ app.delete("/delete-event/:event", verify, async (req, res) => {
 // RENAME EVENT
 app.put("/rename-event", verify, async (req, res) => {
   const { oldEvent, newEvent } = req.body;
-  if (!oldEvent || !newEvent)
-    return res.json({ msg: "Both names required" });
+  if (!oldEvent || !newEvent) return res.json({ msg: "Both names required" });
   // check duplicate
   const exist = await Image.findOne({ event: newEvent });
-  if (exist)
-    return res.json({ msg: "New event name already exists" });
+  if (exist) return res.json({ msg: "New event name already exists" });
   // update DB
-  await Image.updateMany(
-    { event: oldEvent },
-    { $set: { event: newEvent } }
-  );
+  await Image.updateMany({ event: oldEvent }, { $set: { event: newEvent } });
   // rename folder
   const oldDir = `uploads/${oldEvent}`;
   const newDir = `uploads/${newEvent}`;
@@ -241,12 +257,16 @@ app.put("/rename-event", verify, async (req, res) => {
   }
   res.json({ msg: "Event renamed" });
 });
+
+// GET EVENTS STATS
 app.get("/events-stats", async (req, res) => {
   const data = await Image.aggregate([
     { $group: { _id: "$event", count: { $sum: 1 } } },
   ]);
   res.json(data);
 });
+
+// DELETE SINGLE IMAGE
 app.post("/delete-image", verify, async (req, res) => {
   const { id, path } = req.body;
 
@@ -259,16 +279,15 @@ app.post("/delete-image", verify, async (req, res) => {
   res.json({ msg: "deleted" });
 });
 
-app.post('/set-cover', verify, async (req, res) => {
+// SET COVER IMAGE
+app.post("/set-cover", verify, async (req, res) => {
   const { event, id } = req.body;
 
-  await Image.updateMany(
-    { event },
-    { $set: { isCover: false } }
-  );
+  await Image.updateMany({ event }, { $set: { isCover: false } });
   await Image.findByIdAndUpdate(id, { isCover: true });
   res.json({ msg: "Cover image updated" });
-})
+});
+
 // PUBLIC EVENTS (with cover image)
 app.get("/public-events", async (req, res) => {
   console.log("=== PUBLIC-EVENTS ENDPOINT CALLED ===");
@@ -288,7 +307,7 @@ app.get("/public-events", async (req, res) => {
     const sampleImage = await Image.findOne();
     console.log(
       "Sample image structure:",
-      JSON.stringify(sampleImage, null, 2),
+      JSON.stringify(sampleImage, null, 2)
     );
 
     console.log("Starting aggregation...");
@@ -333,6 +352,10 @@ app.get("/public-events", async (req, res) => {
     });
   }
 });
+
+// ===== NOTICE ENDPOINTS =====
+
+// GET ALL NOTICES
 app.get("/notices", async (req, res) => {
   console.log("=== NOTICES ENDPOINT CALLED ===");
   try {
@@ -351,28 +374,59 @@ app.get("/notices", async (req, res) => {
     });
   }
 });
-app.post(
-  "/add-notice",
-  verify,
-  noticeUpload.single("file"),
-  async (req, res) => {
+
+// ADD NEW NOTICE
+app.post("/add-notice", verify, noticeUpload.single("file"), async (req, res) => {
+  console.log("=== ADD NOTICE ENDPOINT CALLED ===");
+  console.log("Request body:", req.body);
+  console.log("Request file:", req.file);
+
+  try {
     const { title, description } = req.body;
 
-    let filePath = "";
-    if (req.file) {
-      filePath = req.file.path;
+    if (!title || !description) {
+      return res.status(400).json({ 
+        msg: "Title and description are required",
+        success: false 
+      });
     }
 
-    await Notice.create({
+    // Prepare file path (will be served via /notice_files/)
+    let filePath = null;
+    if (req.file) {
+      // Store relative path that matches the static serving route
+      filePath = `notice_files/${req.file.filename}`;
+      console.log("File saved to:", req.file.path);
+      console.log("File will be accessible at:", filePath);
+    }
+
+    const newNotice = await Notice.create({
       title,
       description,
       file: filePath,
     });
 
-    res.json({ msg: "Notice added" });
-  }
-);
+    console.log("Notice created successfully:", newNotice);
 
+    res.json({ 
+      msg: "Notice added successfully",
+      success: true,
+      notice: newNotice
+    });
+  } catch (err) {
+    console.error("=== ADD NOTICE ERROR ===");
+    console.error("Error:", err.message);
+    console.error("Stack:", err.stack);
+    
+    res.status(500).json({
+      msg: "Error adding notice",
+      error: err.message,
+      success: false
+    });
+  }
+});
+
+// DELETE NOTICE
 app.delete("/notice/:id", verify, async (req, res) => {
   console.log("=== DELETE NOTICE ===");
   console.log("Notice ID:", req.params.id);
@@ -385,23 +439,37 @@ app.delete("/notice/:id", verify, async (req, res) => {
     }
 
     // Delete the file if it exists
-    if (notice.file && fs.existsSync(notice.file)) {
-      console.log("Deleting file:", notice.file);
-      fs.unlinkSync(notice.file);
+    if (notice.file) {
+      const filePath = notice.file;
+      console.log("Attempting to delete file:", filePath);
+      
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log("File deleted successfully");
+      } else {
+        console.log("File not found on disk:", filePath);
+      }
     }
 
     // Delete from database
     await Notice.findByIdAndDelete(req.params.id);
 
     console.log("Notice deleted successfully");
-    res.json({ msg: "Notice deleted" });
+    res.json({ msg: "Notice deleted", success: true });
   } catch (err) {
     console.error("Delete notice error:", err);
     res.status(500).json({
       msg: "Error deleting notice",
       error: err.message,
+      success: false
     });
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log("=== Static file routes ===");
+  console.log("Gallery images: /uploads");
+  console.log("Notice files: /notice_files");
+});
