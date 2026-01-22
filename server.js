@@ -41,15 +41,11 @@ const ImageSchema = new mongoose.Schema({
   event: String,
   filename: String,
   path: String,
-  uploadedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  isCover: {
-    type: Boolean,
-    default: false,
-  },
+  eventDate: Date,
+  uploadedAt: { type: Date, default: Date.now },
+  isCover: { type: Boolean, default: false }
 });
+
 
 const NoticeSchema = new mongoose.Schema({
   title: String,
